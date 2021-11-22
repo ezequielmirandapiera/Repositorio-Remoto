@@ -18,8 +18,11 @@ namespace Version1
         Socket server;
         Thread atender;
         delegate void DelegadoParaEscribir(string mensaje);
+        delegate void DelegadoParaAceptar(string username, string YoN);
         string username;
         string password;
+
+
         public Form1()
         {
             InitializeComponent();
@@ -29,6 +32,11 @@ namespace Version1
         int iniciadoSesion = 0; //variable que es '0' si todavia no hemos iniciado sesion o '1' si ya hemos iniciado sesion.
         int iniciadoConexion = 0; // variable que es '0' si no se ha iniciado la conexion con el servidor y '1' en caso contrario.
         
+        int invitador = 0; // variable que sera 1 si has sido el invitador o 0 si eres el invitado.
+        bool acepta = false; //Si todos han aceptado la partida.
+        bool creacionPartida = false; //cuando el tiempo para crear la partida o alguien rechaze la partida deja de crearla.
+        bool creada = false; //Si se ha creado o no la partida
+
         public void PonLista(string mensaje)
         {
             DataView.Rows.Clear();
@@ -121,10 +129,58 @@ namespace Version1
                         DelegadoParaEscribir delegado = new DelegadoParaEscribir(PonLista);
                         DataView.Invoke(delegado, new object[] { mensaje });
                         break;
+                    case 7: //llega una petición de invitación.
+                        if (invitador == 0) // Si no eres tu el que has invitado...
+                        {
+                            DialogResult dialogResult = MessageBox.Show(username + ", ¿quieres unirte a una partida?", "Invitación", MessageBoxButtons.YesNo);
+                            if (dialogResult == DialogResult.Yes) // Se acepta la partida.
+                            {
+                                string answer = "7/SI/" + username;
+                                byte[] msg = System.Text.Encoding.ASCII.GetBytes(answer);
+                                server.Send(msg);
+                            }
+                            else if (dialogResult == DialogResult.No) // Se rechaza la partida.
+                            {
+                                string answer = "7/NO/" + username;
+                                byte[] msg = System.Text.Encoding.ASCII.GetBytes(answer);
+                                server.Send(msg);
+                            }
+                        }
+                        break;
+                    case 8:
+                        if (invitador == 1) // El que ha enviado la invitación atentedá esta petición, el resto no.
+                        {
+                            string username = trozos[1];
+                            string YoN = trozos[2];
+                            if (YoN == "NO")
+                            {
+                                acepta = false; // Se rechaza la partida.
+                            }
+                            DelegadoParaAceptar delegado2 = new DelegadoParaAceptar(aceptarInvitacion);
+                            GridInvitados.Invoke(delegado2, new object[] { username, YoN });
+                        }
+                        break;
+                    case 9:
+                        MessageBox.Show("No se ha podido crear la partida, los jugadores no han aceptado la partida.");
+                        break;
+
+                    case 10:
+                        InterfazGrafica Interfaz = new InterfazGrafica();
+                        Interfaz.Show();
+                        break;
                 }
             }
 
         }
+
+        public void aceptarInvitacion(string username, string YoN)
+        {
+            string row = username + " ha aceptado la invitación? " + YoN;
+            GridInvitados.Rows.Add(row);
+            GridInvitados.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
+            GridInvitados.ClearSelection();
+        }
+
         private void button1_Click(object sender, EventArgs e) //crear conexion con el servidor
         {
             //IPAddress direc = IPAddress.Parse("147.83.117.22");
@@ -266,6 +322,58 @@ namespace Version1
             // Enviamos al servidor el nombre tecleado
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
             server.Send(msg);
+        }
+
+        private void invitacion_Click(object sender, EventArgs e)
+        {
+            clock.Start();
+            invitador = 1;
+            acepta = true;
+            creacionPartida = true;
+            time.Text = "40";
+            //enviamos invitación
+            string mensaje = "6/";
+            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+            server.Send(msg);
+
+            GridInvitados.Rows.Clear();
+            GridInvitados.ColumnCount = 1;
+            GridInvitados.GridColor = Color.Yellow;
+
+            DelegadoParaAceptar delegado = new DelegadoParaAceptar(aceptarInvitacion);
+            GridInvitados.Invoke(delegado, new object[] { username, "SI" });
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            clock.Interval = 1000;
+        }
+        private void clock_Tick(object sender, EventArgs e)
+        {
+            int t = Convert.ToInt32(time.Text);
+            t = t - 1;
+            time.Text = Convert.ToString(t);
+
+            if (t == 0)
+            {
+                clock.Stop();
+                creacionPartida = false; 
+                invitador = 0; 
+                if (acepta == false)
+                {
+                    // No se crea la partida. Avisar a todos los usuarios.
+                    string mensaje = "8/";
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                    server.Send(msg);
+                }
+                else if (acepta == true)
+                {
+                    // Se crea la partida y, por lo tanto, se abren los tableros en todos los usuarios.
+                    string mensaje = "9/";
+                    byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
+                    server.Send(msg);
+                }
+            }
         }
     }
 }

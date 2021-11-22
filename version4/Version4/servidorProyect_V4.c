@@ -61,6 +61,23 @@ int DamePosicion (ListaConectados *lista, char nombre[20]){
 }
 
 
+int DameSocket (ListaConectados *lista, char nombre[20]){
+	//devuelve el cocket al que esta conectado el jugador o -1 si no esta en la lista.
+	int i=0;
+	int found=0;
+	while(i<lista->num && !found)
+	{
+		if(strcmp(lista->conectados[i].nombre, nombre)==0)
+			found=1;
+		if(!found)
+			i=i+1;
+	}
+	if(found)
+		  return lista->conectados[1].socket;
+	else
+		return -1;
+}
+
 int Elimina(ListaConectados *lista, char nombre[20]){
 	//Retorna 0 si elimina correctamente y -1 si ese usuario no est en la lista
 	int pos=DamePosicion(lista,nombre);
@@ -554,13 +571,51 @@ void *AtenderCliente(void *socket)
 			sprintf(respuesta,"5/%s", result);
 			printf("Respuesta %s\n", respuesta);
 		}
-		else if (codigo==6)//Invitamos a un jugador a una Partida
+		else if (codigo==6)//Se recibe una peticion de invitación a los jugadores conectados.
 		{
-			p = strtok(NULL, "/");
-			char invitado[20];
-			strcpy(invitado, p);
-			sprintf(respuesta, "7/%s", invitado);
-			printf("Respuesta %s\n", respuesta);
+			char notificacion[30];
+			sprintf(notificacion, "7/");
+			int j;
+			for (j=0; j<miLista.num+1;j++)
+			{
+				write (sockets[j], notificacion, strlen(notificacion));
+			}
+		}
+		else if (codigo==7)// Respuesta a la peticion de invitacion si se acepta o no
+		{
+			char notificacion[300];
+			char username[100];
+			char YoN[100];
+			p=strtok(NULL, "/");
+			strcpy(YoN, p);
+			p=strtok(NULL, "/");
+			strcpy(username, p);
+			sprintf(notificacion, "8/%s/%s",username,YoN);
+			int j;
+			for (j=0; j<miLista.num+1;j++)
+			{
+				write (sockets[j], notificacion, strlen(notificacion));//enviamos notificación a todos los conectados.
+			}
+		}
+		else if(codigo==8)
+		{
+			char notificacion[300];
+			sprintf(notificacion, "9/");
+			int j;
+			for (j=0; j<miLista.num+1;j++)
+			{
+				write (sockets[j], notificacion, strlen(notificacion));//enviamos notificación a todos los conectados.
+			}
+		}
+		else if(codigo==9)
+		{
+			char notificacion[300];
+			sprintf(notificacion, "10/");
+			int j;
+			for (j=0; j<miLista.num+1;j++)
+			{
+				write (sockets[j], notificacion, strlen(notificacion));//enviamos notificación a todos los conectados.
+			}
 		}
 		
 		if (codigo !=0)
