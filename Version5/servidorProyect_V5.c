@@ -135,19 +135,17 @@ int UsernameExist(char username[20], char password[20])
 	strcpy(consulta,"SELECT jugador.passwrd FROM (jugador) WHERE jugador.username='");
 	strcat(consulta,username);
 	strcat(consulta,"'");
-	printf("Hola");
 	err=mysql_query(conn,consulta);
-	printf("Hola2");
 	if(err!=0){
 		printf("Error al consultar datos de la base %u %s\n", mysql_errno(conn),mysql_error(conn));
 		exit(1);
 	}
 	
 	resultado=mysql_store_result(conn);
-	//printf("el resultado es %f", resultado);
+	printf("el resultado es %f \n", resultado);
 	row=mysql_fetch_row(resultado);
 	char passwordReal[20];
-	printf("el row es %s", row[0]);
+	//printf("el row es %s\n", row[0]);
 	if(row==NULL || row[0]==NULL)
 	{
 		printf("No existe un jugador con username: %s\n", username);
@@ -161,7 +159,7 @@ int UsernameExist(char username[20], char password[20])
 		else
 			respuesta=0;
 	}
-	printf("La respuesta es %d", respuesta);
+	printf("La respuesta es %d\n", respuesta);
 	mysql_close(conn);
 	
 	return respuesta;
@@ -260,7 +258,7 @@ int PartidasGanadas(char username[20])
 
 //Genera dos vectores, uno con las id de los 3 jugadores con mas victorias y otro con el numero de puntos de cada jugador
 
-void Top3Jugadores(char ganadores[3], int puntos[3])
+void Top3Jugadores(char ganadores[200])
 {
 	MYSQL *conn;
 	int err;
@@ -271,6 +269,12 @@ void Top3Jugadores(char ganadores[3], int puntos[3])
 	char consulta2[500];
 	int  numJUG;
 	int  JUG1;
+	int p1=0;
+	int p2=0;
+	int p3=0;
+	int id1;
+	int id2;
+	int id3;
 	
 	conn=mysql_init(NULL);
 	if(conn==NULL){
@@ -308,7 +312,7 @@ void Top3Jugadores(char ganadores[3], int puntos[3])
 		int i = JUG1;
 		char ichar [20];
 		numJUG=atoi(row[0]);
-		
+		printf("Numero de jugadores %d\n", numJUG);
 		while(i<=numJUG){
 			strcpy(consulta,"SELECT SUM(participacion.posicion) FROM (jugador,participacion) WHERE jugador.id='");
 			sprintf(ichar,"%d",i);
@@ -325,46 +329,48 @@ void Top3Jugadores(char ganadores[3], int puntos[3])
 			row=mysql_fetch_row(resultado);
 			if(row==NULL)
 				printf("No existe un jugador con ese id\n");
-			if(row[0]==NULL)
-				row[0]="0";
 			else{
+				if(row[0]==NULL)
+					row[0]="0";
+				int pts=atoi(row[0])*3;
+				printf("puntos son %d\n",pts);
 				int podio=0;
-				if((atoi(row[0])>=puntos[0]) && podio==0){
-					ganadores[2]=ganadores[1];
-					puntos[2]=puntos[1];
-					ganadores[1]=ganadores[0];
-					puntos[1]=puntos[0];
-					ganadores[0]=i;
-					puntos[0]=atoi(row[0]);	
-					podio=1;
+				if(pts>=p1){
+					p3=p2;
+					id3=id2;
+					p2=p1;
+					id2=id1;				
+					p1=pts;
+					id1=i;
 				}
-				if((atoi(row[0])>=puntos[1]) && podio==0){
-					ganadores[2]=ganadores[1];
-					puntos[2]=puntos[1];
-					ganadores[1]=i;
-					puntos[1]=atoi(row[0]);	
-					podio=1;
+				else if(pts>=p2){
+					p3=p2;
+					id3=id2;
+					p2=pts;
+					id2=i;
 				}
-				if((atoi(row[0])>=puntos[2]) && podio==0){
-					ganadores[2]=i;
-					puntos[2]=atoi(row[0]);
-					podio=1;				
+				else if(pts>=p3){
+					p3=pts;
+					id3=i;
 				}
-				
 			}
 			i=i+1;
 		}
-		printf("1ero: %i con %i puntos\n2ndo: %i con %i puntos\n3ero: %i con %i puntos\n:",ganadores[0],puntos[0],ganadores[1],puntos[1],ganadores[2],puntos[2]);
+		printf("1ero: %i con %i puntos\n2ndo: %i con %i puntos\n3ero: %i con %i puntos\n:",id1,p1,id2,p2,id3,p3);
+		i=0;
+		while(i<3){
+			sprintf(ganadores,"%d/%d/%d/%d/%d/%d/",id1,p1,id2,p2,id3,p3);
+			i=i+1;
+		}
 	}
 	else
-	   printf("Faltan jugadores");
+	   printf("Faltan jugadores\n");
 	mysql_close(conn);
 }
 
 //devuelve 0 si se ha registrado y -1 si ya esta registrado.
-void Register(char username[20], char password[20], char skin[20], char result[1])
+void Register(char username[20], char password[20], char result[1])
 {
-	printf("Hola %s.\n", skin);
 	MYSQL *conn;
 	int err;
 	MYSQL_RES *resultado;
@@ -421,11 +427,9 @@ void Register(char username[20], char password[20], char skin[20], char result[1
 		strcat(consulta,username);
 		strcat(consulta,"','");
 		strcat(consulta,password);
-		strcat(consulta,"','");
-		strcat(consulta,skin);
 		strcat(consulta,"');");
 		strcpy(result, "0");
-		printf("IDs %s, username %s, password %s, skin %s.\n", ultimoIDs, username, password, skin);
+		printf("IDs %s, username %s, password %s.\n", ultimoIDs, username, password);
 		err=mysql_query(conn,consulta);
 		if(err!=0){
 			printf("Error al consultar datos de la base %u %s.\n", mysql_errno(conn),mysql_error(conn));
@@ -450,7 +454,7 @@ void *AtenderCliente(void *socket)
 	char peticion[1000];
 	char respuesta[1000];
 	int ret;
-	miLista.num=0;
+	//miLista.num=0;
 	
 	int terminar=0;
 	while (terminar ==0)
@@ -465,6 +469,7 @@ void *AtenderCliente(void *socket)
 		
 		
 		printf ("Peticion: %s\n",peticion);
+		
 		
 		// vamos a ver que quieren
 		char *p = strtok( peticion, "/");
@@ -494,17 +499,19 @@ void *AtenderCliente(void *socket)
 					printf("La lista está llena.\n");
 				else
 					printf("se ha añadido a la lista.\n");
-				pthread_mutex_unlock( &mutex);
 				char notificacion[300];
 				char conectados[300];
 				DameConectados(&miLista, conectados);
 				printf("Mis conectados: %s.\n",conectados);
 				sprintf(notificacion,"6/%s",conectados);
+				printf("La notificacion de conectado es %s\n", notificacion);
+				printf("El numero de conectados es %d\n", miLista.num);
 				int j;
-				for (j=0; j<miLista.num;j++)
+				for (j=0; j<miLista.num+1;j++)
 				{
 					write (sockets[j], notificacion, strlen(notificacion));
 				}
+				pthread_mutex_unlock( &mutex);
 			}
 		}
 		
@@ -517,17 +524,19 @@ void *AtenderCliente(void *socket)
 				printf("No esta en la lista.\n");
 			else
 				printf("Se ha eliminado correctamente.\n");
-			pthread_mutex_unlock(&mutex);
 			char notificacion[300];
 			char conectados[300];
 			DameConectados(&miLista, conectados);
 			printf("Mis conectados: %s.\n",conectados);
 			sprintf(notificacion,"6/%s",conectados);
+			printf("La notificacion de eliminacion es %s\n", notificacion);
+			printf("El numero de conectados es %d\n", miLista.num);
 			int j;
 			for (j=0; j<miLista.num+1;j++)
 			{
 				write (sockets[j], notificacion, strlen(notificacion));
 			}
+			pthread_mutex_unlock(&mutex);
 		}
 		else if (codigo ==2) // peticion para saber el tiempo total jugado por el username
 		{
@@ -548,11 +557,10 @@ void *AtenderCliente(void *socket)
 		}
 		else if (codigo==4)//saber el top 3 jugadores de la base de datos
 		{
-			char ganadores[3];
-			int puntos[3];
-			Top3Jugadores(ganadores, puntos);
-			memset(respuesta,0,1000);
-			sprintf(respuesta, "4/El jugador con mas puntos tiene id: %d y tiene %d puntos. El segundo jugador con mas puntos tiene id: %d y tiene %d puntos. El tercer jugador con mas puntos tiene id: %d y tiene %d puntos.", ganadores[0], puntos[0], ganadores[1], puntos[1], ganadores[2], puntos[2]);
+			char ganadores[200];
+			Top3Jugadores(ganadores);
+			printf("%s", ganadores);
+			sprintf(respuesta, "4/%s",ganadores); 
 			printf("La respuesta de top 3 es: %s\n", respuesta);
 		}
 		else if (codigo==5)//resgistrarse en la base de datos
@@ -565,9 +573,8 @@ void *AtenderCliente(void *socket)
 			
 			strcpy (password, p);
 			char skin[20];
-			printf(skin, "Mario");
 			char result[1];
-			Register(username, password, skin, result);
+			Register(username, password, result);
 			sprintf(respuesta,"5/%s", result);
 			printf("Respuesta %s\n", respuesta);
 		}
@@ -590,7 +597,8 @@ void *AtenderCliente(void *socket)
 			strcpy(YoN, p);
 			p=strtok(NULL, "/");
 			strcpy(username, p);
-			sprintf(notificacion, "8/%s/%s",username,YoN);
+			sprintf(notificacion, "8/%s/%s/",username,YoN);
+			printf("Se envia notificacion %s\n", notificacion);
 			int j;
 			for (j=0; j<miLista.num+1;j++)
 			{
@@ -618,7 +626,7 @@ void *AtenderCliente(void *socket)
 			}
 		}
 		
-		if (codigo !=0)
+		if (codigo !=0 && codigo <6)
 		{
 			
 			printf ("Respuesta: %s\n", respuesta);
@@ -658,7 +666,7 @@ int main(int argc, char *argv[])
 	int i;
 	pthread_t thread[100];
 	// Bucle infinito
-	for (i=0; i<5;i++){
+	for (i=0; i<100;i++){
 		printf ("Escuchando\n");
 		
 		sock_conn = accept(sock_listen, NULL, NULL);

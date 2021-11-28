@@ -53,10 +53,9 @@ namespace Version1
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(25, 21);
-            this.button1.Margin = new System.Windows.Forms.Padding(2);
+            this.button1.Location = new System.Drawing.Point(38, 32);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(95, 32);
+            this.button1.Size = new System.Drawing.Size(142, 49);
             this.button1.TabIndex = 0;
             this.button1.Text = "INICIAR";
             this.button1.UseVisualStyleBackColor = true;
@@ -65,46 +64,41 @@ namespace Version1
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(39, 78);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Location = new System.Drawing.Point(58, 120);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(68, 13);
+            this.label1.Size = new System.Drawing.Size(101, 20);
             this.label1.TabIndex = 1;
             this.label1.Text = "USERNAME";
             // 
             // Username
             // 
-            this.Username.Location = new System.Drawing.Point(25, 100);
-            this.Username.Margin = new System.Windows.Forms.Padding(2);
+            this.Username.Location = new System.Drawing.Point(38, 154);
             this.Username.Name = "Username";
-            this.Username.Size = new System.Drawing.Size(96, 20);
+            this.Username.Size = new System.Drawing.Size(142, 26);
             this.Username.TabIndex = 2;
             // 
             // Password
             // 
-            this.Password.Location = new System.Drawing.Point(25, 163);
-            this.Password.Margin = new System.Windows.Forms.Padding(2);
+            this.Password.Location = new System.Drawing.Point(38, 251);
             this.Password.Name = "Password";
-            this.Password.Size = new System.Drawing.Size(96, 20);
+            this.Password.Size = new System.Drawing.Size(142, 26);
             this.Password.TabIndex = 3;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(37, 142);
-            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label2.Location = new System.Drawing.Point(56, 218);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 13);
+            this.label2.Size = new System.Drawing.Size(103, 20);
             this.label2.TabIndex = 4;
             this.label2.Text = "PASSWORD";
             // 
             // Tiempo
             // 
             this.Tiempo.AutoSize = true;
-            this.Tiempo.Location = new System.Drawing.Point(255, 30);
-            this.Tiempo.Margin = new System.Windows.Forms.Padding(2);
+            this.Tiempo.Location = new System.Drawing.Point(382, 46);
             this.Tiempo.Name = "Tiempo";
-            this.Tiempo.Size = new System.Drawing.Size(95, 17);
+            this.Tiempo.Size = new System.Drawing.Size(138, 24);
             this.Tiempo.TabIndex = 5;
             this.Tiempo.TabStop = true;
             this.Tiempo.Text = "Tiempo jugado";
@@ -113,10 +107,9 @@ namespace Version1
             // Victorias
             // 
             this.Victorias.AutoSize = true;
-            this.Victorias.Location = new System.Drawing.Point(255, 85);
-            this.Victorias.Margin = new System.Windows.Forms.Padding(2);
+            this.Victorias.Location = new System.Drawing.Point(382, 131);
             this.Victorias.Name = "Victorias";
-            this.Victorias.Size = new System.Drawing.Size(119, 17);
+            this.Victorias.Size = new System.Drawing.Size(173, 24);
             this.Victorias.TabIndex = 6;
             this.Victorias.TabStop = true;
             this.Victorias.Text = "Numero de victorias";
@@ -125,10 +118,9 @@ namespace Version1
             // Top3
             // 
             this.Top3.AutoSize = true;
-            this.Top3.Location = new System.Drawing.Point(255, 140);
-            this.Top3.Margin = new System.Windows.Forms.Padding(2);
+            this.Top3.Location = new System.Drawing.Point(382, 215);
             this.Top3.Name = "Top3";
-            this.Top3.Size = new System.Drawing.Size(141, 17);
+            this.Top3.Size = new System.Drawing.Size(208, 24);
             this.Top3.TabIndex = 7;
             this.Top3.TabStop = true;
             this.Top3.Text = "Top 3 mejores jugadores";
@@ -136,10 +128,9 @@ namespace Version1
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(269, 184);
-            this.button2.Margin = new System.Windows.Forms.Padding(2);
+            this.button2.Location = new System.Drawing.Point(404, 283);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(101, 27);
+            this.button2.Size = new System.Drawing.Size(152, 42);
             this.button2.TabIndex = 8;
             this.button2.Text = "Enviar";
             this.button2.UseVisualStyleBackColor = true;
@@ -147,10 +138,9 @@ namespace Version1
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(25, 203);
-            this.button3.Margin = new System.Windows.Forms.Padding(2);
+            this.button3.Location = new System.Drawing.Point(38, 312);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(95, 28);
+            this.button3.Size = new System.Drawing.Size(142, 43);
             this.button3.TabIndex = 9;
             this.button3.Text = "Iniciar Sesión";
             this.button3.UseVisualStyleBackColor = true;
@@ -158,10 +148,9 @@ namespace Version1
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(277, 254);
-            this.button4.Margin = new System.Windows.Forms.Padding(2);
+            this.button4.Location = new System.Drawing.Point(416, 391);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(73, 27);
+            this.button4.Size = new System.Drawing.Size(110, 42);
             this.button4.TabIndex = 10;
             this.button4.Text = "Salir";
             this.button4.UseVisualStyleBackColor = true;
@@ -169,10 +158,9 @@ namespace Version1
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(139, 203);
-            this.button5.Margin = new System.Windows.Forms.Padding(2);
+            this.button5.Location = new System.Drawing.Point(208, 312);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(90, 31);
+            this.button5.Size = new System.Drawing.Size(135, 48);
             this.button5.TabIndex = 11;
             this.button5.Text = "Resgistrarse";
             this.button5.UseVisualStyleBackColor = true;
@@ -181,20 +169,19 @@ namespace Version1
             // DataView
             // 
             this.DataView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataView.Location = new System.Drawing.Point(475, 28);
-            this.DataView.Margin = new System.Windows.Forms.Padding(2);
+            this.DataView.Location = new System.Drawing.Point(712, 43);
             this.DataView.Name = "DataView";
             this.DataView.RowHeadersWidth = 62;
             this.DataView.RowTemplate.Height = 28;
-            this.DataView.Size = new System.Drawing.Size(265, 129);
+            this.DataView.Size = new System.Drawing.Size(398, 198);
             this.DataView.TabIndex = 13;
-            this.DataView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataView_CellClick);
             // 
             // invitacion
             // 
-            this.invitacion.Location = new System.Drawing.Point(541, 163);
+            this.invitacion.Location = new System.Drawing.Point(812, 251);
+            this.invitacion.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.invitacion.Name = "invitacion";
-            this.invitacion.Size = new System.Drawing.Size(125, 25);
+            this.invitacion.Size = new System.Drawing.Size(188, 38);
             this.invitacion.TabIndex = 14;
             this.invitacion.Text = "Invitar a jugar";
             this.invitacion.UseVisualStyleBackColor = true;
@@ -203,25 +190,32 @@ namespace Version1
             // GridInvitados
             // 
             this.GridInvitados.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.GridInvitados.Location = new System.Drawing.Point(475, 254);
+            this.GridInvitados.Location = new System.Drawing.Point(712, 391);
+            this.GridInvitados.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.GridInvitados.Name = "GridInvitados";
-            this.GridInvitados.Size = new System.Drawing.Size(265, 95);
+            this.GridInvitados.RowHeadersWidth = 62;
+            this.GridInvitados.Size = new System.Drawing.Size(398, 146);
             this.GridInvitados.TabIndex = 15;
+            // 
+            // clock
+            // 
+            this.clock.Tick += new System.EventHandler(this.clock_Tick);
             // 
             // time
             // 
             this.time.AutoSize = true;
-            this.time.Location = new System.Drawing.Point(581, 218);
+            this.time.Location = new System.Drawing.Point(872, 335);
+            this.time.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.time.Name = "time";
-            this.time.Size = new System.Drawing.Size(38, 13);
+            this.time.Size = new System.Drawing.Size(57, 20);
             this.time.TabIndex = 16;
             this.time.Text = "tiempo";
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(831, 365);
+            this.ClientSize = new System.Drawing.Size(1246, 562);
             this.Controls.Add(this.time);
             this.Controls.Add(this.GridInvitados);
             this.Controls.Add(this.invitacion);
@@ -238,7 +232,6 @@ namespace Version1
             this.Controls.Add(this.Username);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
-            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Form1";
             this.Load += new System.EventHandler(this.Form1_Load);

@@ -39,21 +39,24 @@ namespace Version1
 
         public void PonLista(string mensaje)
         {
-            DataView.Rows.Clear();
-            DataView.ColumnCount = 1;
-            DataView.ColumnHeadersVisible = true;
-            if (mensaje!=null)
+            if (iniciadoConexion== 1)
             {
-                char delimiter = '/';
-                string[] division = mensaje.Split(delimiter);
-                int i = 0;
-                while (i < division.Length)
+                DataView.Rows.Clear();
+                DataView.ColumnCount = 1;
+                DataView.ColumnHeadersVisible = true;
+                if (mensaje != null)
                 {
-                    DataView.Rows.Add(division[i]);
-                    i = i + 1;
+                    char delimiter = '/';
+                    string[] division = mensaje.Split(delimiter);
+                    int i = 0;
+                    while (i < division.Length)
+                    {
+                        DataView.Rows.Add(division[i]);
+                        i = i + 1;
 
+                    }
+                    DataView.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
                 }
-                DataView.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             }
         }
         private void AtenderServidor()
@@ -66,6 +69,7 @@ namespace Version1
                 string[] trozos = Encoding.ASCII.GetString(msg2).Split('/');
                 int codigo = Convert.ToInt32(trozos[0]);
                 string mensaje;
+                //MessageBox.Show("El codigo es: " + codigo);
                 switch (codigo)
                 {
                     case 1:
@@ -93,11 +97,11 @@ namespace Version1
                     case 4:
                         try
                         {
-                            mensaje = trozos[1].Split('.')[0];
+                            mensaje = "En la posición 1 tenemos al jugador de id= " + trozos[1] + " con " + trozos[2] + " puntos.";
                             MessageBox.Show(mensaje);
-                            mensaje = trozos[1].Split('.')[1];
+                            mensaje = "En la posición 2 tenemos al jugador de id= " + trozos[3] + " con " + trozos[4] + " puntos.";
                             MessageBox.Show(mensaje);
-                            mensaje = trozos[1].Split('.')[2];
+                            mensaje = "En la posición 3 tenemos al jugador de id= " + trozos[5] + " con " + trozos[6] + " puntos.";
                             MessageBox.Show(mensaje);
                         }
                         catch (IndexOutOfRangeException)
@@ -128,6 +132,7 @@ namespace Version1
                         }
                         DelegadoParaEscribir delegado = new DelegadoParaEscribir(PonLista);
                         DataView.Invoke(delegado, new object[] { mensaje });
+                        
                         break;
                     case 7: //llega una petición de invitación.
                         if (invitador == 0) // Si no eres tu el que has invitado...
@@ -183,10 +188,11 @@ namespace Version1
 
         private void button1_Click(object sender, EventArgs e) //crear conexion con el servidor
         {
-            //IPAddress direc = IPAddress.Parse("147.83.117.22");
-            //IPEndPoint ipep = new IPEndPoint(direc, 50057);
-            IPAddress direc = IPAddress.Parse("192.168.56.101");
-            IPEndPoint ipep = new IPEndPoint(direc, 9060);
+            IPAddress direc = IPAddress.Parse("147.83.117.22");
+            IPEndPoint ipep = new IPEndPoint(direc, 50057);
+            //IPAddress direc = IPAddress.Parse("192.168.56.101");
+            //IPEndPoint ipep = new IPEndPoint(direc, 9060);
+
 
             //Creamos el socket 
             server = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -312,25 +318,13 @@ namespace Version1
                 MessageBox.Show("Inicie conexión con el servidor!!");
         }
 
-        private void DataView_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            int k = e.RowIndex;
-            int r = e.ColumnIndex;
-            string invitado = Convert.ToString(DataView.Rows[k].Cells[r].Value);
-            // Enviamos nombre y password
-            string mensaje = "6/" + invitado;
-            // Enviamos al servidor el nombre tecleado
-            byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
-            server.Send(msg);
-        }
-
         private void invitacion_Click(object sender, EventArgs e)
         {
             clock.Start();
             invitador = 1;
             acepta = true;
             creacionPartida = true;
-            time.Text = "40";
+            time.Text = "20";
             //enviamos invitación
             string mensaje = "6/";
             byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
@@ -361,6 +355,7 @@ namespace Version1
                 invitador = 0; 
                 if (acepta == false)
                 {
+                    time.Text = "Time";
                     // No se crea la partida. Avisar a todos los usuarios.
                     string mensaje = "8/";
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);
@@ -368,6 +363,7 @@ namespace Version1
                 }
                 else if (acepta == true)
                 {
+                    time.Text = "Time";
                     // Se crea la partida y, por lo tanto, se abren los tableros en todos los usuarios.
                     string mensaje = "9/";
                     byte[] msg = System.Text.Encoding.ASCII.GetBytes(mensaje);

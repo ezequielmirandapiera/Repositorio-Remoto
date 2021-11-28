@@ -16,5 +16,10 @@ namespace Version1
         {
             InitializeComponent();
         }
+
+        private void InterfazGrafica_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }
